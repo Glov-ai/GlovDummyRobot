@@ -11,6 +11,7 @@ class DummyRobot extends GlovRobot {
   };
 
   init = async (variant: string|null, pageInfoPromise: Promise<GlovPageInfo>): Promise <void> => {
+    console.log("In init method");
     // Relevant page context (product details, category details) is passed as a promise than can be awaited until the information is available
     this.pageInfo = await pageInfoPromise;
     if (!this.pageInfo.pageType) return;
@@ -20,6 +21,7 @@ class DummyRobot extends GlovRobot {
   };
 
   engage = async (): Promise <void> => {
+    console.log("In engage method");
     // Set state as failed initially, until successfully completed and set to applied
     this.setState(GlovRobotState.FAILED);
     try {
@@ -33,11 +35,13 @@ class DummyRobot extends GlovRobot {
       document.body.prepend(el);
       // Set stat as applied to show engage is successful
       this.setState(GlovRobotState.APPLIED);
+      console.log("Engage finished successfully");
     } catch (error) {}
   };
 
   // Clean up the DOM element and any any other resources
   destruct(): void {
+    console.log("In destruct method");
     const el = document.getElementById(ELEMENT_ID);
     el && el.remove();
   };
