@@ -1,4 +1,4 @@
-import GlovRobot, {GlovRobotProps, GlovRobotState} from "glov-robot";
+import GlovRobot, {GlovPageInfo, GlovRobotProps, GlovRobotState} from "glov-robot";
 // ID of element to be inserted in the DOM
 const ELEMENT_ID = "glv__dummy-robot";
 // Robot will be eligible to run on only PDP and PLP pages
@@ -10,9 +10,10 @@ class DummyRobot extends GlovRobot {
     super(props);
   };
 
-  init = async (variant: string|null, pageInfoPromise: Promise<any>): Promise <void> => {
+  init = async (variant: string|null, pageInfoPromise: Promise<GlovPageInfo>): Promise <void> => {
     // Relevant page context (product details, category details) is passed as a promise than can be awaited until the information is available
-    this.pageInfo = await pageInfoPromise || {};
+    this.pageInfo = await pageInfoPromise;
+    if (!this.pageInfo.pageType) return;
     this.variant = variant || "A";
     if (!pageTypes.includes(this.pageInfo.pageType)) return;
     this.setState(GlovRobotState.ELIGIBLE);
