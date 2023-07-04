@@ -12,7 +12,7 @@ class DummyRobot extends GlovRobot {
 
   init = async (variant: string|null, pageInfoPromise: Promise<GlovPageInfo>): Promise <void> => {
     console.log("In init method");
-    // Relevant page context (product details, category details) is passed as a promise than can be awaited until the information is available
+    // Relevant page context (product details, category details) is passed as a promise that can be awaited until the information is available
     this.pageInfo = await pageInfoPromise;
     if (!this.pageInfo.pageType) return;
     this.variant = variant || "A";
@@ -20,7 +20,7 @@ class DummyRobot extends GlovRobot {
     this.setState(GlovRobotState.ELIGIBLE);
   };
 
-  engage = async (): Promise <void> => {
+  engage = (): void => {
     console.log("In engage method");
     // Set state as failed initially, until successfully completed and set to applied
     this.setState(GlovRobotState.FAILED);
@@ -33,13 +33,16 @@ class DummyRobot extends GlovRobot {
       el.style.height = "20px";
       el.style.backgroundColor = this.variants[this.variant];
       document.body.prepend(el);
-      // Set stat as applied to show engage is successful
+      // Set stat as applied to show engagement is successful
       this.setState(GlovRobotState.APPLIED);
       console.log("Engage finished successfully");
-    } catch (error) {}
+    } catch (error) {
+      this.destruct();
+      this.setState(GlovRobotState.FAILED);
+    }
   };
 
-  // Clean up the DOM element and any any other resources
+  // Clean up the DOM element and any other resources
   destruct(): void {
     console.log("In destruct method");
     const el = document.getElementById(ELEMENT_ID);
@@ -48,7 +51,7 @@ class DummyRobot extends GlovRobot {
 }
 
 // Self invoking function to register the robot
-(async () => {
+(() => {
   try {
     const props: GlovRobotProps = {
       name: "DummyRobot",
